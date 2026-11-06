@@ -1,0 +1,19 @@
+import { NextResponse } from 'next/server';
+import { saveSocialLink } from '@/lib/social-store';
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { provider, token } = body ?? {};
+
+    if (!provider || !token) {
+      return NextResponse.json({ ok: false, error: 'Provider and token are required.' }, { status: 400 });
+    }
+
+    await saveSocialLink(provider, token);
+
+    return NextResponse.json({ ok: true, provider, connectedAt: new Date().toISOString() });
+  } catch (error) {
+    return NextResponse.json({ ok: false, error: 'Failed to save social account connection.' }, { status: 500 });
+  }
+}
