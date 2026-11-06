@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { ArrowLeft, BarChart3, MessageSquareText, PenTool, Zap } from 'lucide-react';
+import { BarChart3, Lightbulb, MessageSquareText, PenTool, Zap } from 'lucide-react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const nav = [
     { href: '/dashboard', label: 'Overview', icon: BarChart3 },
+    { href: '/dashboard/ideas', label: 'Idea Lab', icon: Lightbulb },
     { href: '/dashboard/chat', label: 'Creator Coach', icon: MessageSquareText },
     { href: '/dashboard/script', label: 'Script Builder', icon: PenTool },
     { href: '/dashboard/analytics', label: 'Performance Log', icon: BarChart3 },
