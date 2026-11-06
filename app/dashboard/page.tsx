@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ArrowUpRight, Copy, LineChart, Lightbulb, MessageSquareText, PenTool, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Copy, LineChart, Lightbulb, MessageSquareText, PenTool, SearchCheck, Sparkles } from 'lucide-react';
 import { formatCount, interactionRate, readPosts, type PostEntry } from '@/lib/creator-data';
 
 const actions = [
+  { href: '/dashboard/audit', title: 'Profile Audit', detail: 'Review your metrics and get an action plan', icon: SearchCheck },
   { href: '/dashboard/ideas', title: 'Idea Lab', detail: 'Find five angles for your niche', icon: Lightbulb },
   { href: '/dashboard/chat', title: 'Creator Coach', detail: 'Get practical creator guidance', icon: MessageSquareText },
   { href: '/dashboard/script', title: 'Script Builder', detail: 'Draft a hook, body, and CTA', icon: PenTool },
@@ -31,7 +32,7 @@ export default function DashboardPage() {
   };
 
   return <div className="space-y-7">
-    <section className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><p className="text-xs uppercase tracking-[0.28em] text-violet-200/75">Your creator workspace</p><h1 className="mt-2 text-3xl font-bold text-white">Welcome back</h1><p className="mt-2 text-sm text-slate-400">Insights below come from posts you log in this browser—not estimates.</p></div><Link href="/dashboard/analytics" className="w-fit rounded-full bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-500">Log a post</Link></section>
+    <section className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><p className="text-xs uppercase tracking-[0.28em] text-violet-200/75">Your creator workspace</p><h1 className="mt-2 text-3xl font-bold text-white">Welcome back</h1><p className="mt-2 text-sm text-slate-400">Insights below come from posts you log in this browser—not estimates.</p></div><Link href="/dashboard/audit" className="w-fit rounded-full bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-500">Start a profile audit</Link></section>
     <section className="grid gap-4 sm:grid-cols-3">{[
       { label: 'Logged views', value: formatCount(views), note: `${posts.length} post${posts.length === 1 ? '' : 's'} recorded` },
       { label: 'Engagement rate', value: `${rate.toFixed(1)}%`, note: 'likes + comments + shares + saves / views' },

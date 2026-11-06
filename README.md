@@ -1,14 +1,16 @@
 # CreatorPulse AI
 
-A mobile-friendly creator growth coach and content-planning toolkit. Its purpose is to help creators who cannot afford a subscription get useful planning, scripting, and performance-tracking tools without a paywall.
+CreatorPulse is a free-first creator growth coach for people who cannot afford a subscription. It is designed to help short-form creators review performance, find ideas, write scripts, and learn from what they publish—not to sell guaranteed virality or pretend to have platform access.
 
-## What works
+## Creator coaching workflow
 
-- **Idea Lab:** creates five niche/audience/tone-aware short-form ideas with formats and structures. Uses local idea frameworks without a key, or an optional configured OpenAI-compatible LLM.
-- **Script Builder:** makes a hook/body/CTA script from the brief. Uses local templates by default or the same optional LLM.
-- **Creator Coach:** flexible LLM responses when configured; rule-based guidance works without an API key.
-- **Performance Log:** manually enter real metrics from your platform analytics; totals and engagement rates are calculated in the browser. Data stays in local storage on this device.
-- **Honest analytics:** no invented metrics, fake social connections, or guarantees of virality.
+1. **Profile & Performance Audit:** enter your niche, focus, follower count, and average metrics from recent posts. CreatorPulse calculates transparent descriptive ratios and gives concrete next steps. It does not log in to social accounts or fetch profile data.
+2. **Idea Lab:** generate five niche- and audience-aware content angles with suggested format and structure.
+3. **Script Builder:** turn a brief into a hook, body, CTA, and relevant hashtags.
+4. **Creator Coach:** ask for guidance on a hook, idea, structure, or posting test.
+5. **Performance Log:** record real post metrics and compare your own results over time.
+
+Core no-key versions work without payment. An optional hosted LLM can make ideas, scripts, audits, and chat more flexible, but the upstream provider's free quota may be limited. No tool promises a post will go viral.
 
 ## Run locally
 
@@ -20,11 +22,11 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open http://localhost:3000. No payment, API key, database account, or login is needed for local core features.
+Open http://localhost:3000. No payment, API key, database account, or login is needed for local core tools.
 
 ## Optional hosted model
 
-Chat, script, and idea routes support an OpenAI-compatible chat-completions provider. If you have access to a provider's free tier, configure its server-side credentials. Free quotas and eligibility change; they are not unlimited or guaranteed.
+The chat, script, ideas, and audit routes support an OpenAI-compatible chat-completions provider. Configure a provider that currently offers a free tier if you have an eligible account; free quotas, availability, and terms can change.
 
 ```env
 LLM_BASE_URL=https://provider.example/v1
@@ -32,10 +34,13 @@ LLM_API_KEY=your_secret_key
 LLM_MODEL=provider-model-id
 ```
 
-Use the base URL exactly as the provider documents it, usually ending in `/v1`; the app appends `/chat/completions`. Never use a `NEXT_PUBLIC_` prefix for the secret or commit it. Leave values blank for local fallbacks. Check provider pricing, data policy, model availability, and request limits before use.
+Use the base URL exactly as the provider documents it, usually ending in `/v1`; the app appends `/chat/completions`. Never use a `NEXT_PUBLIC_` prefix for the secret or commit it. Leave values blank for local rules/templates. Review provider pricing, data policy, model availability, and request limits before use.
 
-A free upstream quota is finite. Do not expose a shared provider key on a public app without authentication and durable rate limiting. These routes limit prompt sizes and have request timeouts, but this repository does **not** yet have a distributed rate limiter; public deployment with a shared key needs that before launch.
+Free quotas are finite. Do not expose a shared provider key on a public app without authentication and durable rate limiting. These routes limit prompt sizes and have request timeouts, but this repository does **not** yet have a distributed rate limiter; public deployment with a shared key needs abuse protection first.
 
-## Not connected yet
+## Current limitations
 
-Profile data sync, automatic posting-time recommendations, and cross-platform reposting require platform-approved OAuth/API access and secure per-user token storage. The app does not claim these work until those integrations are implemented and configured. Performance records are manual and local to this browser. The no-key coach and script/idea tools are templates/frameworks, not an LLM.
+- Profile audits use self-reported metrics, not direct platform profile access. Ratios are descriptive, not official platform benchmarks.
+- Performance entries are stored only in this browser. Clearing site data removes them.
+- Real profile sync, automatic audience-activity recommendations, and cross-platform reposting require approved platform OAuth/API access and secure per-user token storage. They are not enabled or simulated.
+- The no-key coach, idea generator, and script builder use rules/templates rather than a language model.
