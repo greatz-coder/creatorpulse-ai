@@ -1,13 +1,13 @@
 # CreatorPulse AI
 
-A mobile-friendly creator toolkit built around honest, working no-API-key features.
+A mobile-friendly creator toolkit that keeps its core features usable without a paid API key.
 
-## What works now
+## What works
 
-- **Script Builder:** takes the creator's niche, audience, topic, and tone and returns a structured, editable hook/body/CTA draft with relevant tags. It uses deterministic templates, not an LLM, and makes no virality guarantee.
-- **Creator Coach:** a small rule-based coaching endpoint for hook, idea, structure, and posting-time prompts. It makes no external AI/API calls and does not claim to know changing platform algorithms.
-- **Performance Log:** lets you enter post metrics, calculates total views and engagement rate, and stores/removes entries using this browser's local storage. Engagement rate is (likes + comments + shares + saves) / views. Entries do not sync across devices or users.
-- **Daily hook prompt:** a writing prompt, not a prediction or trend feed.
+- **Script Builder:** builds an editable hook/body/CTA script from the brief. It uses local templates when no hosted model is configured; optionally calls a configured OpenAI-compatible LLM endpoint.
+- **Creator Coach:** uses the same optional hosted LLM integration for flexible answers. If it is not configured, a rule-based local coach remains available.
+- **Performance Log:** lets you enter metrics from platform analytics, calculates totals and engagement rate, and stores/removes entries in this browser's local storage. It does not fetch social data or sync across devices.
+- **No invented metrics or connections:** social OAuth is disabled until a real platform integration is configured.
 
 ## Run locally
 
@@ -15,19 +15,33 @@ Requirements: Node.js 18.17+ and npm.
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-Open http://localhost:3000. No API key, database account, or login is required for these local features. Production build: `npm run build`.
+Open http://localhost:3000. No API key, database account, or login is required for the local template/coach and performance-log features.
 
-## Important limitations
+## Optional hosted LLM, without a paid OpenAI key
 
-This version intentionally does **not** show fabricated analytics or simulate social connections. The old `/api/social/connect` endpoint now returns `501` and stores no tokens. Real profile analysis, automatic insights, and cross-platform publishing require each platform's approved OAuth/API access, application credentials, consent scopes, a secure database/token-vault, and platform-specific implementation. Do not send social passwords or tokens to the disabled endpoint.
+The server routes support an **OpenAI-compatible** chat-completions API. You may use a provider that currently offers a free tier, subject to that provider's account requirements, model availability, quotas, and terms. Free quotas change and are not guaranteed to be unlimited or suitable for a public app.
 
-The local coach and script builder are not substitutes for a language model. They are useful no-cost workflows that work without API credits. An optional local LLM can be added later for users who run their own model, but a public hosted service cannot promise unlimited free inference without someone supplying compute.
+Set these variables in `.env.local` or your hosting provider's server-only environment settings:
 
-Performance records live only in browser local storage. Clearing site data removes them. Do not use shared/public devices for private creator records.
+```env
+LLM_BASE_URL=https://provider.example/v1
+LLM_API_KEY=your_secret_key
+LLM_MODEL=provider-model-id
+```
 
-## Next production steps for social integrations
+Use the base URL exactly as the provider documents it, usually ending in `/v1` (not `/chat/completions`). The app appends `/chat/completions`. Pick a model enabled for your account. Restart the dev server after changing environment variables. Leave all three blank to use local fallback tools. The secret is only read in API routes; never put it in a `NEXT_PUBLIC_` variable or commit it.
 
-Implement one platform at a time (YouTube is a reasonable first choice): create an OAuth app, request only required read scopes, validate OAuth state and callback origins, encrypt refresh tokens at rest in a user-isolated database, implement token revocation/disconnect, and build analytics from documented API fields. Publishing/reposting should be a separate explicit permission and workflow. Never accept access tokens directly from the browser as a substitute for OAuth.
+**Free is not the same as unlimited:** users' requests to a hosted provider consume that provider's quota. For a public deployment, configure strict provider limits and add durable rate limiting/authentication before enabling a shared key, or visitors could exhaust the quota. The app caps input/output size and times out requests, but its API routes do not implement a distributed rate limiter. Never promise unlimited free AI to users.
+
+## Known limitations
+
+- Template-based script generation and the local coach are not LLMs.
+- Hosted model availability depends on your chosen provider and account. A provider outage or quota limit returns an error rather than silently pretending the model generated a response.
+- Performance entries exist only in the current browser. Clearing site data removes them.
+- Real profile analysis, social analytics sync, and repost scheduling require approved platform OAuth/API access, app credentials, user consent, and secure token storage. The existing disabled social endpoint does not accept or store tokens.
+
+Before deploying a shared provider key to a public audience, add a durable rate limiter and authentication or another abuse-control mechanism, and review the provider's data-use terms.
